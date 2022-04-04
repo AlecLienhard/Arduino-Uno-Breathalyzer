@@ -1,0 +1,179 @@
+
+#include <SPI.h>
+#include <Wire.h>
+
+
+int TIME_UNTIL_WARMUP = 900; // warm up for 15 minutes!
+unsigned long time;
+
+int analogPin = 0;
+int val = 0;
+
+// LED pins
+int led1 = 3; // Green
+int led2 = 4; // Green
+int led3 = 5; // Green
+int led4 = 6; // Yellow
+int led5 = 7; // Yellow
+int led6 = 8; // Yellow
+int led7 = 9; // Red
+int led8 = 10; //Red
+int led9 = 11; //Red
+
+int ledState = LOW;
+unsigned long previousMillis = 0;
+long blinkInterval = 250;
+
+void setup()   {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  pinMode(led5, OUTPUT);
+  pinMode(led6, OUTPUT);
+  pinMode(led7, OUTPUT);
+  pinMode(led8, OUTPUT);
+  pinMode(led9, OUTPUT);
+  
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  digitalWrite(led5, LOW);
+  digitalWrite(led6, LOW);
+  digitalWrite(led7, LOW);
+  digitalWrite(led8, LOW);
+  digitalWrite(led9, LOW);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= blinkInterval) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+
+    // if the LED is off turn it on and vice-versa:
+    if (ledState == LOW) {
+      ledState = HIGH;
+    } else {
+      ledState = LOW;
+    }
+  }
+
+  delay(100);
+
+  val = readAlcohol();
+ 
+  time = millis() / 1000;
+  
+  
+  
+  int sensorValue;
+  sensorValue = analogRead(analogPin); // read analog input pin 0
+
+  Serial.print("Sensor Value: ");
+  Serial.println(sensorValue);
+  
+  delay(1000); // wait 2s for next reading
+  printAlcoholLevel(sensorValue);
+
+ 
+
+}
+
+
+
+
+
+void printAlcoholLevel(int value)
+{
+  
+ if (value < 200)
+  {
+    digitalWrite(led1, HIGH);
+  }
+  if (value >= 200 && value < 250)
+  {
+    digitalWrite(led1, HIGH);
+    digitalWrite(led2, HIGH);
+  }
+  if (value >= 250 && value < 300)
+  {
+    digitalWrite(led1, HIGH);
+    digitalWrite(led2, HIGH);
+    digitalWrite(led3, HIGH);
+  }
+if (value >= 300 && value < 350 )
+  {
+    digitalWrite(led4, HIGH);
+  }
+  if (value >= 350 && value < 400)
+  {
+    digitalWrite(led4, HIGH);
+    digitalWrite(led5, HIGH);
+  }
+  if (value >= 400 && value < 450)
+  {
+    digitalWrite(led4, HIGH);
+    digitalWrite(led5, HIGH);
+    digitalWrite(led6, HIGH);
+  }
+
+  if (value >= 450 && value < 500)
+  {
+    digitalWrite(led7, HIGH);
+  }
+if (value >= 500 && value < 550)
+  {
+    digitalWrite(led7, HIGH);
+     digitalWrite(led8, HIGH);
+  }
+  if (value >= 550)
+  {
+    digitalWrite(led7, HIGH);
+    digitalWrite(led8, HIGH);
+    digitalWrite(led9, HIGH);
+  }
+
+
+
+
+
+  }
+
+
+  
+
+int readAlcohol(){
+  int val = 0;
+  int val1;
+  int val2;
+  int val3;
+
+  val1 = analogRead(analogPin);
+  delay(10);
+  val2 = analogRead(analogPin);
+  delay(10);
+  val3 = analogRead(analogPin);
+
+  val = (val1 + val2 + val3) / 3;
+  return val;
+}
+
+int reset(){
+  
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  digitalWrite(led5, LOW);
+  digitalWrite(led6, LOW);
+  digitalWrite(led7, LOW);
+  digitalWrite(led8, LOW);
+  digitalWrite(led9, LOW);
+  
+}
